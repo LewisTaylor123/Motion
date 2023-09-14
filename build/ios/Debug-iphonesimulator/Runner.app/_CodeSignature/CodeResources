@@ -46,7 +46,7 @@
 		</data>
 		<key>Frameworks/App.framework/App</key>
 		<data>
-		2zuq5Slu0COcfDsWANr6TdFQIwM=
+		AJXdosUiGt1QctC/hyVGFGBGfkk=
 		</data>
 		<key>Frameworks/App.framework/Info.plist</key>
 		<data>
@@ -54,7 +54,7 @@
 		</data>
 		<key>Frameworks/App.framework/_CodeSignature/CodeResources</key>
 		<data>
-		Wedc27ckjvuPD2CtDusRMWq0pcE=
+		i8yr+8W7nrASxoPml9QYBpRhoZA=
 		</data>
 		<key>Frameworks/App.framework/flutter_assets/AssetManifest.bin</key>
 		<data>
@@ -82,7 +82,7 @@
 		</data>
 		<key>Frameworks/App.framework/flutter_assets/kernel_blob.bin</key>
 		<data>
-		8lB98LCFok+kA9Tr6J/rS0/Z3Qg=
+		k+ndcdetYINeMdAkDuBKJuu8VGg=
 		</data>
 		<key>Frameworks/App.framework/flutter_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf</key>
 		<data>
@@ -190,7 +190,7 @@
 		</data>
 		<key>Frameworks/camera_avfoundation.framework/camera_avfoundation</key>
 		<data>
-		1OD8hy8X+YEJsMWGq9Rj17YG8SQ=
+		hLtJpjNA5Tys+wpK8PRHILnfmEs=
 		</data>
 		<key>Frameworks/path_provider_foundation.framework/Info.plist</key>
 		<data>
@@ -202,7 +202,7 @@
 		</data>
 		<key>Frameworks/path_provider_foundation.framework/path_provider_foundation</key>
 		<data>
-		LydrFa2+q5wEofk2j+DiVmKOCtg=
+		AVOo8xyjpApwvx5zXU0fvkLBtFY=
 		</data>
 		<key>Info.plist</key>
 		<data>
@@ -289,7 +289,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			YStbc3FJo1yStAgftZH8783maeFuBAXtHczltJbnKSI=
+			JSMT558YbW7SumUSGQlCRX81nknDbzbxvGi7ktYFCrI=
 			</data>
 		</dict>
 		<key>Frameworks/App.framework/Info.plist</key>
@@ -303,7 +303,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			GQn0UGBoYEW1rGSsELlYj2/y2Se4USkyn/idN3lc+aM=
+			O6pPl4cuCmiC+fyboptChMY78vtdjzWKfyc7JZ1jshE=
 			</data>
 		</dict>
 		<key>Frameworks/App.framework/flutter_assets/AssetManifest.bin</key>
@@ -352,7 +352,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			HXuD+VQWEnlUqvn967s9oKaSvVZTDrLa3/+3kJIrE3I=
+			Jqnx7YChslMtWhlu1Z1sXvk0Kpzs1fNF/ZhJgjNx92c=
 			</data>
 		</dict>
 		<key>Frameworks/App.framework/flutter_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf</key>
@@ -541,7 +541,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			o/5ANQYixAA+YOjdk3609UQEcs4vMdoaEJsg6eEm0YI=
+			l62mK+/qpVAbKituFwaAyc2Y7rUxYAJnq3czJl4Ou9A=
 			</data>
 		</dict>
 		<key>Frameworks/path_provider_foundation.framework/Info.plist</key>
@@ -562,7 +562,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			ey/2OQdZearJzUXmednxLwUTXomm5O0nkMEmmwE5O2M=
+			HWEaiYGeL99jBoPAX+EXQI5pwQyCR1msKxMOfZ9+Jus=
 			</data>
 		</dict>
 	</dict>

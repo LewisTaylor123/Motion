@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:ui';
+import 'dart:math';
 import 'package:camera/camera.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
@@ -15,14 +16,20 @@ class CaptureController extends GetxController {
   RxString rxPath1 = ''.obs;
   RxString rxPath2 = ''.obs;
   RxString rxDiff = ''.obs;
-  RxList rxList = [].obs;
+  RxList<double> rxList = <double>[].obs;
 
   @override
   Future<void> onInit() async {
+    //_mockTakePhotos();
+    _inistialiseCameraAndStartTakingPhotos();
+    super.onInit();
+  }
+
+  _inistialiseCameraAndStartTakingPhotos() async {
     final cameras = await availableCameras();
 
     CameraDescription? front = cameras.firstWhereOrNull(
-        (element) => element.lensDirection == CameraLensDirection.front);
+        (element) => element.lensDirection == CameraLensDirection.back);
 
     if (front != null) {
       cameraController = CameraController(
@@ -33,7 +40,6 @@ class CaptureController extends GetxController {
       await cameraController?.initialize();
       takePhotos(rxList);
     }
-    super.onInit();
   }
 
   List<Color> gradientColors = [
@@ -60,18 +66,16 @@ class CaptureController extends GetxController {
       try {
         //await _initializeControllerFuture;
 
+        const int maxX = 120;
 
         final image = await cameraController?.takePicture();
         print(image);
 
-        // Step 2: Check for valid file
         if (image == null) return;
 
-// Step 3: Get directory where we can duplicate selected file.
         final String duplicateFilePath =
             (await getApplicationDocumentsDirectory()).path;
 
-// Step 4: Copy the file to a application document directory.
 
         String filePath = '$duplicateFilePath/${index.toString()}';
         await image.saveTo(filePath);
@@ -83,7 +87,18 @@ class CaptureController extends GetxController {
 
           double diff = await compare(path1, path2);
 
-          rxList.add(diff);
+          List lastThirty =
+          barGroups.reversed.take(maxX).toList().reversed.toList();
+
+          barGroups.add(BarChartGroupData(
+            x: 1,
+            barRods: [
+              BarChartRodData(
+                toY: diff,
+                gradient: _barsGradient,
+              )
+            ],
+          ),);
 
           rxDiff.call(diff.toString());
 
@@ -95,4 +110,299 @@ class CaptureController extends GetxController {
       }
     });
   }
+
+  _mockTakePhotos() {
+    timer = Timer.periodic(const Duration(milliseconds: 100), (timer) async {
+      rxList.add(Random().nextDouble());
+    });
+  }
+
+
+
+  RxList<BarChartGroupData> barGroups = <BarChartGroupData> [
+
+    /*BarChartGroupData(
+      x: 1,
+      barRods: [
+        BarChartRodData(
+          toY: 0.5,
+          gradient: _barsGradient,
+        )
+      ],
+    ),
+    BarChartGroupData(
+      x: 2,
+      barRods: [
+        BarChartRodData(
+          toY: 0.5,
+          gradient: _barsGradient,
+        )
+      ],
+    ),
+    BarChartGroupData(
+      x: 3,
+      barRods: [
+        BarChartRodData(
+          toY: 0.5,
+          gradient: _barsGradient,
+        )
+      ],
+    ),
+    BarChartGroupData(
+      x: 4,
+      barRods: [
+        BarChartRodData(
+          toY: 0.5,
+          gradient: _barsGradient,
+        )
+      ],
+    ),
+    BarChartGroupData(
+      x: 5,
+      barRods: [
+        BarChartRodData(
+          toY: 0.5,
+          gradient: _barsGradient,
+        )
+      ],
+    ),
+    BarChartGroupData(
+      x: 6,
+      barRods: [
+        BarChartRodData(
+          toY: 0.5,
+          gradient: _barsGradient,
+        )
+      ],
+    ),
+    BarChartGroupData(
+      x: 7,
+      barRods: [
+        BarChartRodData(
+          toY: 0.5,
+          gradient: _barsGradient,
+        )
+      ],
+    ),
+    BarChartGroupData(
+      x: 8,
+      barRods: [
+        BarChartRodData(
+          toY: 0.5,
+          gradient: _barsGradient,
+        )
+      ],
+    ),
+    BarChartGroupData(
+      x: 9,
+      barRods: [
+        BarChartRodData(
+          toY: 0.5,
+          gradient: _barsGradient,
+        )
+      ],
+    ),
+    BarChartGroupData(
+      x: 10,
+      barRods: [
+        BarChartRodData(
+          toY: 0.5,
+          gradient: _barsGradient,
+        )
+      ],
+    ),
+    BarChartGroupData(
+      x: 11,
+      barRods: [
+        BarChartRodData(
+          toY: 0.5,
+          gradient: _barsGradient,
+        )
+      ],
+    ),
+    BarChartGroupData(
+      x: 12,
+      barRods: [
+        BarChartRodData(
+          toY: 0.5,
+          gradient: _barsGradient,
+        )
+      ],
+    ),
+    BarChartGroupData(
+      x: 13,
+      barRods: [
+        BarChartRodData(
+          toY: 0.5,
+          gradient: _barsGradient,
+        )
+      ],
+    ),
+    BarChartGroupData(
+      x: 14,
+      barRods: [
+        BarChartRodData(
+          toY: 0.5,
+          gradient: _barsGradient,
+        )
+      ],
+    ),
+    BarChartGroupData(
+      x: 15,
+      barRods: [
+        BarChartRodData(
+          toY: 0.5,
+          gradient: _barsGradient,
+        )
+      ],
+    ),
+    BarChartGroupData(
+      x: 16,
+      barRods: [
+        BarChartRodData(
+          toY: 0.5,
+          gradient: _barsGradient,
+        )
+      ],
+    ),
+    BarChartGroupData(
+      x: 17,
+      barRods: [
+        BarChartRodData(
+          toY: 0.5,
+          gradient: _barsGradient,
+        )
+      ],
+    ),
+    BarChartGroupData(
+      x: 18,
+      barRods: [
+        BarChartRodData(
+          toY: 0.5,
+          gradient: _barsGradient,
+        )
+      ],
+    ),
+    BarChartGroupData(
+      x: 19,
+      barRods: [
+        BarChartRodData(
+          toY: 0.5,
+          gradient: _barsGradient,
+        )
+      ],
+    ),
+    BarChartGroupData(
+      x: 20,
+      barRods: [
+        BarChartRodData(
+          toY: 0.5,
+          gradient: _barsGradient,
+        )
+      ],
+    ),
+    BarChartGroupData(
+      x: 21,
+      barRods: [
+        BarChartRodData(
+          toY: 0.5,
+          gradient: _barsGradient,
+        )
+      ],
+    ),
+    BarChartGroupData(
+      x: 22,
+      barRods: [
+        BarChartRodData(
+          toY: 0.5,
+          gradient: _barsGradient,
+        )
+      ],
+    ),
+    BarChartGroupData(
+      x: 23,
+      barRods: [
+        BarChartRodData(
+          toY: 0.5,
+          gradient: _barsGradient,
+        )
+      ],
+    ),
+    BarChartGroupData(
+      x: 24,
+      barRods: [
+        BarChartRodData(
+          toY: 0.5,
+          gradient: _barsGradient,
+        )
+      ],
+    ),
+    BarChartGroupData(
+      x: 25,
+      barRods: [
+        BarChartRodData(
+          toY: 0.5,
+          gradient: _barsGradient,
+        )
+      ],
+    ),
+    BarChartGroupData(
+      x: 26,
+      barRods: [
+        BarChartRodData(
+          toY: 0.5,
+          gradient: _barsGradient,
+        )
+      ],
+    ),
+    BarChartGroupData(
+      x: 27,
+      barRods: [
+        BarChartRodData(
+          toY: 0.5,
+          gradient: _barsGradient,
+        )
+      ],
+    ),
+    BarChartGroupData(
+      x: 28,
+      barRods: [
+        BarChartRodData(
+          toY: 0.5,
+          gradient: _barsGradient,
+        )
+      ],
+    ),
+    BarChartGroupData(
+      x: 29,
+      barRods: [
+        BarChartRodData(
+          toY: 0.5,
+          gradient: _barsGradient,
+        )
+      ],
+    ),
+
+     */
+    BarChartGroupData(
+      x: 30,
+      barRods: [
+        BarChartRodData(
+          toY: 0.5,
+          //gradient: _barsGradient,
+        )
+      ],
+    ),
+
+
+  ].obs;
+
+  LinearGradient get _barsGradient => const LinearGradient(
+    colors: [
+      Colors.blue,
+      Colors.cyan,
+    ],
+    begin: Alignment.bottomCenter,
+    end: Alignment.topCenter,
+  );
 }

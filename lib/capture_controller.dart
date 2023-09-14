@@ -121,7 +121,8 @@ class CaptureController extends GetxController {
 
   RxList<BarChartGroupData> barGroups = <BarChartGroupData> [
 
-    /*BarChartGroupData(
+    /*
+    BarChartGroupData(
       x: 1,
       barRods: [
         BarChartRodData(

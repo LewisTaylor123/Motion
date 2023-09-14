@@ -30,6 +30,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
+// ignore: strict_raw_type
 List<GetPage> pages() {
   return [
     GetPage(

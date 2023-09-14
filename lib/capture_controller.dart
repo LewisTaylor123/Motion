@@ -1,43 +1,53 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
+
 import 'package:camera/camera.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:image_compare/image_compare.dart';
+import 'package:path_provider/path_provider.dart';
 
 class CaptureController extends GetxController {
-  Timer? timer;
-  CameraController? cameraController;
-  int index = 0;
-  List<String> theList = [];
+  Timer? _timer;
+  CameraController? _cameraController;
+  int _index = 0;
+  final List<String> _theList = [];
+
+  /// used to show the last images taken
   RxString rxPath1 = ''.obs;
+
+  /// used to show the last images taken
   RxString rxPath2 = ''.obs;
-  RxString rxDiff = ''.obs;
+
+  /// used to show the value of difference
+  RxString rxDifferenceInImages = ''.obs;
+
+  /// The list of data
   RxList<double> rxList = <double>[].obs;
 
   @override
   Future<void> onInit() async {
     //_mockTakePhotos();
-    _inistialiseCameraAndStartTakingPhotos();
+    await _inistialiseCameraAndStartTakingPhotos();
     super.onInit();
   }
 
-  _inistialiseCameraAndStartTakingPhotos() async {
+  Future<void> _inistialiseCameraAndStartTakingPhotos() async {
     final cameras = await availableCameras();
 
-    CameraDescription? front = cameras.firstWhereOrNull(
-        (element) => element.lensDirection == CameraLensDirection.back);
+    final front = cameras.firstWhereOrNull(
+      (element) => element.lensDirection == CameraLensDirection.back,
+    );
 
     if (front != null) {
-      cameraController = CameraController(
+      _cameraController = CameraController(
         front,
         ResolutionPreset.low,
       );
 
-      await cameraController?.initialize();
+      await _cameraController?.initialize();
       takePhotos(rxList);
     }
   }
@@ -49,58 +59,59 @@ class CaptureController extends GetxController {
 
   @override
   void onClose() {
-    timer?.cancel();
+    _timer?.cancel();
     super.onClose();
   }
 
   Future<double> compare(String path1, String path2) async {
-    double result = await compareImages(src1: File(path1), src2: File(path2));
+    final result = await compareImages(src1: File(path1), src2: File(path2));
 
     print(result);
 
     return result;
   }
 
-  takePhotos(list) {
-    timer = Timer.periodic(const Duration(seconds: 3), (timer) async {
+  void takePhotos(list) {
+    _timer = Timer.periodic(const Duration(seconds: 3), (timer) async {
       try {
         //await _initializeControllerFuture;
 
-        const int maxX = 120;
+        const maxX = 120;
 
-        final image = await cameraController?.takePicture();
+        final image = await _cameraController?.takePicture();
         print(image);
 
         if (image == null) return;
 
-        final String duplicateFilePath =
+        final duplicateFilePath =
             (await getApplicationDocumentsDirectory()).path;
 
-
-        String filePath = '$duplicateFilePath/${index.toString()}';
+        final filePath = '$duplicateFilePath/${_index.toString()}';
         await image.saveTo(filePath);
-        index++;
-        theList.add(filePath);
-        if (theList.length > 1) {
-          String path1 = theList[theList.length - 1];
-          String path2 = theList[theList.length - 2];
+        _index++;
+        _theList.add(filePath);
+        if (_theList.length > 1) {
+          final path1 = _theList[_theList.length - 1];
+          final path2 = _theList[_theList.length - 2];
 
-          double diff = await compare(path1, path2);
+          final diff = await compare(path1, path2);
 
-          List lastThirty =
-          barGroups.reversed.take(maxX).toList().reversed.toList();
+          final lastThirty =
+              barGroups.reversed.take(maxX).toList().reversed.toList();
 
-          barGroups.add(BarChartGroupData(
-            x: 1,
-            barRods: [
-              BarChartRodData(
-                toY: diff,
-                gradient: _barsGradient,
-              )
-            ],
-          ),);
+          barGroups.add(
+            BarChartGroupData(
+              x: 1,
+              barRods: [
+                BarChartRodData(
+                  toY: diff,
+                  gradient: _barsGradient,
+                )
+              ],
+            ),
+          );
 
-          rxDiff.call(diff.toString());
+          rxDifferenceInImages.call(diff.toString());
 
           rxPath2.call(path2);
           rxPath1.call(path1);
@@ -111,16 +122,13 @@ class CaptureController extends GetxController {
     });
   }
 
-  _mockTakePhotos() {
-    timer = Timer.periodic(const Duration(milliseconds: 100), (timer) async {
+  void _mockTakePhotos() {
+    _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) async {
       rxList.add(Random().nextDouble());
     });
   }
 
-
-
-  RxList<BarChartGroupData> barGroups = <BarChartGroupData> [
-
+  RxList<BarChartGroupData> barGroups = <BarChartGroupData>[
     /*
     BarChartGroupData(
       x: 1,
@@ -394,16 +402,14 @@ class CaptureController extends GetxController {
         )
       ],
     ),
-
-
   ].obs;
 
   LinearGradient get _barsGradient => const LinearGradient(
-    colors: [
-      Colors.blue,
-      Colors.cyan,
-    ],
-    begin: Alignment.bottomCenter,
-    end: Alignment.topCenter,
-  );
+        colors: [
+          Colors.blue,
+          Colors.cyan,
+        ],
+        begin: Alignment.bottomCenter,
+        end: Alignment.topCenter,
+      );
 }

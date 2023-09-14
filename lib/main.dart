@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-
-import 'capture_controller.dart';
-import 'capture_screen.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:helping_mum_motion/capture_controller.dart';
+import 'package:helping_mum_motion/capture_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,7 +15,9 @@ void main() {
   runApp(const MyApp());
 }
 
+/// entry widget for the app
 class MyApp extends StatelessWidget {
+  // empty constructor
   const MyApp({super.key});
 
   @override
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
+/// the pages of the app
 // ignore: strict_raw_type
 List<GetPage> pages() {
   return [
@@ -41,6 +43,7 @@ List<GetPage> pages() {
   ];
 }
 
+/// binding for the capture screen
 class CaptureScreenBinding implements Bindings {
   @override
   void dependencies() {

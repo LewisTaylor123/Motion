@@ -5,12 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:helping_mum_motion/capture_controller.dart';
 
-const int maxX = 120;
-
+/// the main screen in the app
 class CaptureScreen extends GetView<CaptureController> {
-  static String routeName = '/$CaptureScreen';
-
+  /// empty constructor
   const CaptureScreen({super.key});
+
+  /// route name
+  static String routeName = '/$CaptureScreen';
 
   @override
   Widget build(BuildContext context) {
@@ -23,36 +24,49 @@ class CaptureScreen extends GetView<CaptureController> {
           ),
         ),
         child: SafeArea(
-          child: Column(
-            children: [
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Room Motion',
-                  style: TextStyle(fontSize: 25),
-                ),
-              ),
-              Obx(() {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildChart(controller.rxLastMinute),
-                    _buildChart(controller.rxLastHour),
-                  ],
-                );
-              }),
-              _buildCameraFeed()
-            ],
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                Expanded(flex: 0, child: _title()),
+                Expanded(flex: 50, child: _charts()),
+                Expanded(flex: 50, child: _buildCameraFeed())
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
+  Widget _charts() {
+    return Obx(() {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(flex: 48, child: _buildChart(controller.rxLastMinute)),
+          const Expanded(
+            flex: 4,
+            child: SizedBox(),
+          ),
+          Expanded(flex: 48, child: _buildChart(controller.rxLastHour)),
+        ],
+      );
+    });
+  }
+
+  Widget _title() {
+    return const Align(
+      alignment: Alignment.centerLeft,
+      child: Text(
+        'Room Motion',
+        style: TextStyle(fontSize: 32),
+      ),
+    );
+  }
+
   Container _buildChart(List<BarChartGroupData> data) {
     return Container(
-      margin: const EdgeInsets.all(15.0),
-      padding: const EdgeInsets.all(3.0),
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border.all(color: Colors.blueAccent),
@@ -71,15 +85,13 @@ class CaptureScreen extends GetView<CaptureController> {
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8),
         child: SizedBox(
-          height: 300,
-          width: 600,
           child: BarChart(
             BarChartData(
-              barTouchData: barTouchData,
-              titlesData: titlesData,
-              borderData: borderData,
+              barTouchData: _barTouchData,
+              titlesData: _titlesData,
+              borderData: _borderData,
               barGroups: data,
               gridData: const FlGridData(show: false),
               alignment: BarChartAlignment.spaceAround,
@@ -93,22 +105,19 @@ class CaptureScreen extends GetView<CaptureController> {
 
   Widget _buildCameraFeed() {
     return Obx(
-        () => controller.rxPath1.value != '' && controller.rxPath2.value != ''
-            ? Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox.square(
-                      dimension: 160,
-                      child: Image.file(File(controller.rxPath1.value))),
-                  SizedBox.square(
-                      dimension: 160,
-                      child: Image.file(File(controller.rxPath2.value))),
-                ],
-              )
-            : const SizedBox());
+      () => controller.rxPath1.value != '' && controller.rxPath2.value != ''
+          ? Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.file(File(controller.rxPath1.value)),
+                Image.file(File(controller.rxPath2.value)),
+              ],
+            )
+          : const SizedBox(),
+    );
   }
 
-  BarTouchData get barTouchData => BarTouchData(
+  BarTouchData get _barTouchData => BarTouchData(
         enabled: false,
         touchTooltipData: BarTouchTooltipData(
           tooltipBgColor: Colors.transparent,
@@ -131,11 +140,11 @@ class CaptureScreen extends GetView<CaptureController> {
         ),
       );
 
-  FlTitlesData get titlesData => const FlTitlesData(
-        show: true,
+  FlTitlesData get _titlesData => const FlTitlesData(
+        show: false,
       );
 
-  FlBorderData get borderData => FlBorderData(
+  FlBorderData get _borderData => FlBorderData(
         show: false,
       );
 }

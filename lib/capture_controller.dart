@@ -9,21 +9,18 @@ import 'package:get/get.dart';
 import 'package:image_compare/image_compare.dart';
 import 'package:path_provider/path_provider.dart';
 
-/// The main view of the app
+/// The controller for the main screen in the app
 class CaptureController extends GetxController {
   // public
-
-  /// used to show the last images taken
-  RxString rxPath1 = ''.obs;
-
-  /// used to show the last images taken
-  RxString rxPath2 = ''.obs;
 
   /// the data for the last minute
   RxList<BarChartGroupData> rxLastMinute = <BarChartGroupData>[].obs;
 
   /// the data for the last hour
   RxList<BarChartGroupData> rxLastHour = <BarChartGroupData>[].obs;
+
+  /// used to show the last images taken
+  RxList<String> rxLastFivePhotoPaths = <String>[].obs;
 
   // private
 
@@ -36,8 +33,9 @@ class CaptureController extends GetxController {
 
   @override
   Future<void> onInit() async {
-    _mockTakePhotos();
-    //await _inistialiseCameraAndStartTakingPhotos();
+    _initTestHourOfData();
+    //_mockTakePhotos();
+    await _inistialiseCameraAndStartTakingPhotos();
     super.onInit();
   }
 
@@ -49,18 +47,17 @@ class CaptureController extends GetxController {
 
   Future<double> _compare(String path1, String path2) async {
     final result = await compareImages(src1: File(path1), src2: File(path2));
-
-    print(result);
-
     return result;
   }
 
-  void _mockTakePhotos() {
-    for (int i = 0; i < 1800; i++) {
+  void _initTestHourOfData() {
+    for (var i = 0; i < 1800; i++) {
       _addToBarGraphs(Random().nextDouble());
     }
+  }
 
-    _timer = Timer.periodic(const Duration(milliseconds: 2000), (timer) async {
+  void _mockTakePhotos() {
+    _timer = Timer.periodic(const Duration(milliseconds: 3000), (timer) async {
       final newValue = Random().nextDouble();
       _addToBarGraphs(newValue);
     });
@@ -69,38 +66,35 @@ class CaptureController extends GetxController {
   void _addToBarGraphs(double value) {
     _dataList.add(value);
 
-    final lastMinute = _dataList.reversed.take(30).toList().reversed.toList();
-    final lastHour = _dataList.reversed.take(150).toList().reversed.toList();
+    final lastMinute = _dataList.reversed.take(20).toList().reversed.toList();
+    final lastHour = _dataList.reversed.take(1000).toList().reversed.toList();
 
     rxLastMinute.clear();
-    for (double val in lastMinute) {
+    for (final val in lastMinute) {
       rxLastMinute.add(
-        BarChartGroupData(
-          x: 1,
-          barRods: [
-            BarChartRodData(
-              toY: val,
-              gradient: _barsGradient,
-            )
-          ],
-        ),
+        _barChartGroupData(val, 10),
       );
     }
 
     rxLastHour.clear();
-    for (double val in lastHour) {
+    for (final val in lastHour) {
       rxLastHour.add(
-        BarChartGroupData(
-          x: 1,
-          barRods: [
-            BarChartRodData(
-              toY: val,
-              gradient: _barsGradient,
-            )
-          ],
-        ),
+        _barChartGroupData(val, 1),
       );
     }
+  }
+
+  BarChartGroupData _barChartGroupData(double val, double width) {
+    return BarChartGroupData(
+      x: 1,
+      barRods: [
+        BarChartRodData(
+          toY: val,
+          width: width,
+          gradient: _barsGradient,
+        )
+      ],
+    );
   }
 
   //----------------------------------------
@@ -128,11 +122,11 @@ class CaptureController extends GetxController {
       );
 
       await _cameraController?.initialize();
-      takePhotos(_dataList);
+      _takePhotos(_dataList);
     }
   }
 
-  void takePhotos(list) {
+  void _takePhotos(list) {
     _timer = Timer.periodic(const Duration(seconds: 3), (timer) async {
       try {
         final image = await _cameraController?.takePicture();
@@ -152,24 +146,12 @@ class CaptureController extends GetxController {
 
           final diff = await _compare(path1, path2);
 
-          rxLastHour.add(
-            BarChartGroupData(
-              x: 1,
-              barRods: [
-                BarChartRodData(
-                  toY: diff,
-                  gradient: _barsGradient,
-                )
-              ],
-            ),
-          );
+          _addToBarGraphs(diff);
 
-          rxPath2.call(path2);
-          rxPath1.call(path1);
+          rxLastFivePhotoPaths =
+
         }
-      } catch (e) {
-        print(e);
-      }
+      } catch (e) {}
     });
   }
 }

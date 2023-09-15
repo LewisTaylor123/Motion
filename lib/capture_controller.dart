@@ -122,11 +122,11 @@ class CaptureController extends GetxController {
       );
 
       await _cameraController?.initialize();
-      _takePhotos(_dataList,rxLastFivePhotoPaths);
+      _takePhotos(_dataList);
     }
   }
 
-  void _takePhotos(list,List<String> rxLastFivePhotoPaths) {
+  void _takePhotos(list) {
     _timer = Timer.periodic(const Duration(seconds: 3), (timer) async {
       try {
         final image = await _cameraController?.takePicture();
@@ -148,17 +148,11 @@ class CaptureController extends GetxController {
 
           _addToBarGraphs(diff);
 
-
-          rxLastFivePhotoPaths = _listOfPathsToImages.toList().getRange(
-            _listOfPathsToImages.length - 5, _listOfPathsToImages.length,);
-
+          rxLastFivePhotoPaths
+              .call(_listOfPathsToImages.reversed.toList().take(5).toList());
 
           print(rxLastFivePhotoPaths);
-
-
         }
-
-
       } catch (e) {}
     });
   }

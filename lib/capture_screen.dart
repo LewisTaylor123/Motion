@@ -106,13 +106,11 @@ class CaptureScreen extends GetView<CaptureController> {
   Widget _buildCameraFeed() {
     return Obx(
       () => controller.rxLastFivePhotoPaths.isNotEmpty
-      
           ? Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 for (String path in controller.rxLastFivePhotoPaths)
-                  Center(child: Text(path))
-                  //Image.file(File(path)),
+                  Image.file(File(path)),
               ],
             )
           : Center(child: const Text('hello')),

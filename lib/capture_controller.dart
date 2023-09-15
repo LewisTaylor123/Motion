@@ -33,7 +33,7 @@ class CaptureController extends GetxController {
 
   @override
   Future<void> onInit() async {
-    _initTestHourOfData();
+    //_initTestHourOfData();
     //_mockTakePhotos();
     await _inistialiseCameraAndStartTakingPhotos();
     super.onInit();
@@ -122,11 +122,11 @@ class CaptureController extends GetxController {
       );
 
       await _cameraController?.initialize();
-      _takePhotos(_dataList);
+      _takePhotos(_dataList,rxLastFivePhotoPaths);
     }
   }
 
-  void _takePhotos(list) {
+  void _takePhotos(list,List<String> rxLastFivePhotoPaths) {
     _timer = Timer.periodic(const Duration(seconds: 3), (timer) async {
       try {
         final image = await _cameraController?.takePicture();
@@ -148,9 +148,17 @@ class CaptureController extends GetxController {
 
           _addToBarGraphs(diff);
 
-          rxLastFivePhotoPaths =
+
+          rxLastFivePhotoPaths = _listOfPathsToImages.toList().getRange(
+            _listOfPathsToImages.length - 5, _listOfPathsToImages.length,);
+
+
+          print(rxLastFivePhotoPaths);
+
 
         }
+
+
       } catch (e) {}
     });
   }

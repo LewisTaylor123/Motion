@@ -30,7 +30,10 @@ class CaptureScreen extends GetView<CaptureController> {
               children: [
                 Expanded(flex: 0, child: _title()),
                 Expanded(flex: 50, child: _charts()),
-                Expanded(flex: 50, child: _buildCameraFeed())
+                Expanded(flex: 0, child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0,0,0,8),
+                  child: _buildCameraFeed(),
+                ))
               ],
             ),
           ),
@@ -44,12 +47,8 @@ class CaptureScreen extends GetView<CaptureController> {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded(flex: 48, child: _buildChart(controller.rxLastMinute)),
-          const Expanded(
-            flex: 4,
-            child: SizedBox(),
-          ),
-          Expanded(flex: 48, child: _buildChart(controller.rxLastHour)),
+          Expanded(flex: 50, child: _buildChart(controller.rxLastMinute, 'Live')),
+          Expanded(flex: 50, child: _buildChart(controller.rxLastHour, 'Past hour')),
         ],
       );
     });
@@ -65,37 +64,45 @@ class CaptureScreen extends GetView<CaptureController> {
     );
   }
 
-  Container _buildChart(List<BarChartGroupData> data) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: Colors.blueAccent),
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(10),
-          topRight: Radius.circular(10),
-          bottomLeft: Radius.circular(10),
-          bottomRight: Radius.circular(10),
-        ),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.grey,
-            blurRadius: 4,
-            offset: Offset(4, 8), // Shadow position
+  Padding _buildChart(List<BarChartGroupData> data,String chartTitle) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: Colors.blueAccent),
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(10),
+            topRight: Radius.circular(10),
+            bottomLeft: Radius.circular(10),
+            bottomRight: Radius.circular(10),
           ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: SizedBox(
-          child: BarChart(
-            BarChartData(
-              barTouchData: _barTouchData,
-              titlesData: _titlesData,
-              borderData: _borderData,
-              barGroups: data,
-              gridData: const FlGridData(show: false),
-              alignment: BarChartAlignment.spaceAround,
-              maxY: 1,
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.grey,
+              blurRadius: 4,
+              offset: Offset(4, 8), // Shadow position
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: SizedBox(
+            child: Stack(
+              children: [
+                BarChart(
+                  BarChartData(
+                    barTouchData: _barTouchData,
+                    titlesData: _titlesData,
+                    borderData: _borderData,
+                    barGroups: data,
+                    gridData: const FlGridData(show: false),
+                    alignment: BarChartAlignment.spaceAround,
+                    maxY: 1,
+                  ),
+                ),
+                Align(alignment: Alignment.bottomCenter,child: Text(chartTitle))
+              ],
             ),
           ),
         ),
@@ -106,14 +113,36 @@ class CaptureScreen extends GetView<CaptureController> {
   Widget _buildCameraFeed() {
     return Obx(
       () => controller.rxLastFivePhotoPaths.isNotEmpty
-          ? Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                for (String path in controller.rxLastFivePhotoPaths)
-                  Image.file(File(path)),
-              ],
-            )
-          : Center(child: const Text('hello')),
+          ? Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: Colors.blueAccent),
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(10),
+            topRight: Radius.circular(10),
+            bottomLeft: Radius.circular(10),
+            bottomRight: Radius.circular(10),
+          ),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.grey,
+              blurRadius: 4,
+              offset: Offset(4, 8), // Shadow position
+            ),
+          ],
+        ),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  for (String path in controller.rxLastFivePhotoPaths)
+                    Expanded(flex: 20 ,child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Image.file(File(path)),
+                    )),
+                ],
+              ),
+          )
+          : Center(child: const Text('no data')),
     );
   }
 

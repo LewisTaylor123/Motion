@@ -5,11 +5,11 @@ import 'package:helping_mum_motion/capture_controller.dart';
 import 'package:helping_mum_motion/capture_screen.dart';
 
 void main() {
+
   WidgetsFlutterBinding.ensureInitialized();
   // Step 3
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.landscapeLeft,
-    DeviceOrientation.landscapeRight,
   ]).then((value) => runApp(const MyApp()));
 
   runApp(const MyApp());
@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+
       debugShowCheckedModeBanner: false,
       title: 'Helping Mum Motion',
       initialRoute: CaptureScreen.routeName,

@@ -112,7 +112,7 @@ class CaptureController extends GetxController {
     final cameras = await availableCameras();
 
     final front = cameras.firstWhereOrNull(
-      (element) => element.lensDirection == CameraLensDirection.back,
+      (element) => element.lensDirection == CameraLensDirection.front,
     );
 
     if (front != null) {

@@ -30,8 +30,8 @@ class CaptureScreen extends GetView<CaptureController> {
               children: [
                 Expanded(flex: 0, child: _title()),
                 Expanded(flex: 50, child: _charts()),
-                Expanded(flex: 0, child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0,0,0,8),
+                Expanded(flex: 25, child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20,12,20,8),
                   child: _buildCameraFeed(),
                 ))
               ],
@@ -66,7 +66,7 @@ class CaptureScreen extends GetView<CaptureController> {
 
   Padding _buildChart(List<BarChartGroupData> data,String chartTitle) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(20.0),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -88,20 +88,27 @@ class CaptureScreen extends GetView<CaptureController> {
         child: Padding(
           padding: const EdgeInsets.all(8),
           child: SizedBox(
-            child: Stack(
+            child: Column(
               children: [
-                BarChart(
-                  BarChartData(
-                    barTouchData: _barTouchData,
-                    titlesData: _titlesData,
-                    borderData: _borderData,
-                    barGroups: data,
-                    gridData: const FlGridData(show: false),
-                    alignment: BarChartAlignment.spaceAround,
-                    maxY: 1,
+                Expanded(
+                  flex: 80,
+                  child: BarChart(
+                    BarChartData(
+                      barTouchData: _barTouchData,
+                      titlesData: _titlesData,
+                      borderData: _borderData,
+                      barGroups: data,
+                      gridData: const FlGridData(show: false),
+                      alignment: BarChartAlignment.spaceAround,
+                      maxY: 1,
+                    ),
                   ),
                 ),
-                Align(alignment: Alignment.bottomCenter,child: Text(chartTitle))
+                Expanded(flex: 0,child: Container(height: 1,color: Colors.black,)),
+                Expanded(flex:0,child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(chartTitle),
+                ))
               ],
             ),
           ),
@@ -112,8 +119,7 @@ class CaptureScreen extends GetView<CaptureController> {
 
   Widget _buildCameraFeed() {
     return Obx(
-      () => controller.rxLastFivePhotoPaths.isNotEmpty
-          ? Container(
+      () =>  Container(
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(color: Colors.blueAccent),
@@ -131,18 +137,22 @@ class CaptureScreen extends GetView<CaptureController> {
             ),
           ],
         ),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  for (String path in controller.rxLastFivePhotoPaths)
-                    Expanded(flex: 20 ,child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Image.file(File(path)),
-                    )),
-                ],
-              ),
-          )
-          : Center(child: const Text('no data')),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Center(child: Container(color: Colors.transparent,child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('Camera Feed'),
+                )),),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children:
+                      _lastFivePhotos(),
+
+                  ),
+              ],
+            ),
+          ),
     );
   }
 
@@ -176,4 +186,26 @@ class CaptureScreen extends GetView<CaptureController> {
   FlBorderData get _borderData => FlBorderData(
         show: false,
       );
+
+  List<Widget> _lastFivePhotos() {
+    List<Widget> imageWidgets = <Widget>[];
+     for (String path in controller.rxLastFivePhotoPaths) {
+       imageWidgets.add(Container(child: Container(child: _photoFrame(Image.file(File(path))))));
+        }
+    while(imageWidgets.length < 5) {
+      imageWidgets.insert(0,  _photoFrame(Image.asset('assets/helping_mum_static.png')));
+     };
+     return imageWidgets;
+  }
+
+  Widget _photoFrame(Widget child) {
+    return Expanded(flex: 20 ,child: Container(
+
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: ClipRRect(
+      borderRadius: BorderRadius.circular(20.0),child: child)),
+    ),
+    );
+  }
 }

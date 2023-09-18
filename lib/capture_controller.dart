@@ -33,7 +33,7 @@ class CaptureController extends GetxController {
 
   @override
   Future<void> onInit() async {
-    //_initTestHourOfData();
+    _initTestHourOfData();
     //_mockTakePhotos();
     await _inistialiseCameraAndStartTakingPhotos();
     super.onInit();
@@ -52,7 +52,7 @@ class CaptureController extends GetxController {
 
   void _initTestHourOfData() {
     for (var i = 0; i < 1800; i++) {
-      _addToBarGraphs(Random().nextDouble());
+      _addToBarGraphs(0.0);
     }
   }
 

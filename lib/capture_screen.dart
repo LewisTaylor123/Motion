@@ -30,7 +30,7 @@ class CaptureScreen extends GetView<CaptureController> {
               children: [
                 Expanded(flex: 0, child: _title()),
                 Expanded(flex: 50, child: _charts()),
-                Expanded(flex: 25, child: Padding(
+                Expanded(flex: 20, child: Padding(
                   padding: const EdgeInsets.fromLTRB(20,12,20,8),
                   child: _buildCameraFeed(),
                 ))
@@ -48,18 +48,21 @@ class CaptureScreen extends GetView<CaptureController> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(flex: 50, child: _buildChart(controller.rxLastMinute, 'Live')),
-          Expanded(flex: 50, child: _buildChart(controller.rxLastHour, 'Past hour')),
+          Expanded(flex: 50, child: _buildChart(controller.rxLastHour, 'Last 60 Minutes')),
         ],
       );
     });
   }
 
   Widget _title() {
-    return const Align(
-      alignment: Alignment.centerLeft,
-      child: Text(
-        'Room Motion',
-        style: TextStyle(fontSize: 32),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20,0,0,0),
+      child: const Align(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          'Room Motion',
+          style: TextStyle(fontSize: 32),
+        ),
       ),
     );
   }
@@ -72,10 +75,10 @@ class CaptureScreen extends GetView<CaptureController> {
           color: Colors.white,
           border: Border.all(color: Colors.blueAccent),
           borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(10),
-            topRight: Radius.circular(10),
-            bottomLeft: Radius.circular(10),
-            bottomRight: Radius.circular(10),
+            topLeft: Radius.circular(15),
+            topRight: Radius.circular(15),
+            bottomLeft: Radius.circular(15),
+            bottomRight: Radius.circular(15),
           ),
           boxShadow: const [
             BoxShadow(
@@ -104,10 +107,9 @@ class CaptureScreen extends GetView<CaptureController> {
                     ),
                   ),
                 ),
-                Expanded(flex: 0,child: Container(height: 1,color: Colors.black,)),
                 Expanded(flex:0,child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(chartTitle),
+                  child: Text(chartTitle,style: TextStyle(fontSize: 25),),
                 ))
               ],
             ),
@@ -124,10 +126,10 @@ class CaptureScreen extends GetView<CaptureController> {
           color: Colors.white,
           border: Border.all(color: Colors.blueAccent),
           borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(10),
-            topRight: Radius.circular(10),
-            bottomLeft: Radius.circular(10),
-            bottomRight: Radius.circular(10),
+            topLeft: Radius.circular(15),
+            topRight: Radius.circular(15),
+            bottomLeft: Radius.circular(15),
+            bottomRight: Radius.circular(15),
           ),
           boxShadow: const [
             BoxShadow(
@@ -140,10 +142,10 @@ class CaptureScreen extends GetView<CaptureController> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Center(child: Container(color: Colors.transparent,child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text('Camera Feed'),
-                )),),
+                Center(child: Padding(
+                  padding: const EdgeInsets.only(top:8.0),
+                  child: Text('Camera Feed',style: TextStyle(fontSize: 25)),
+                ),),
                 Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children:
@@ -193,7 +195,7 @@ class CaptureScreen extends GetView<CaptureController> {
        imageWidgets.add(Container(child: Container(child: _photoFrame(Image.file(File(path))))));
         }
     while(imageWidgets.length < 5) {
-      imageWidgets.insert(0,  _photoFrame(Image.asset('assets/helping_mum_static.png')));
+      imageWidgets.insert(0,  _photoFrame(Image.asset('assets/helping_mum_static_white.png')));
      };
      return imageWidgets;
   }
@@ -202,7 +204,7 @@ class CaptureScreen extends GetView<CaptureController> {
     return Expanded(flex: 20 ,child: Container(
 
       child: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.fromLTRB(20,0,20,10),
         child: ClipRRect(
       borderRadius: BorderRadius.circular(20.0),child: child)),
     ),

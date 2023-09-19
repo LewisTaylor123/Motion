@@ -34,8 +34,8 @@ class CaptureController extends GetxController {
   @override
   Future<void> onInit() async {
     _initTestHourOfData();
-    //_mockTakePhotos();
-    await _inistialiseCameraAndStartTakingPhotos();
+    _mockTakePhotos();
+    //await _inistialiseCameraAndStartTakingPhotos();
     super.onInit();
   }
 
